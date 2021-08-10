@@ -1,0 +1,7 @@
+[
+    {
+        "Type": "redis",
+        "Pattern": "type:dice",
+        "Channel": "dice"
+    }
+]

@@ -1,0 +1,7 @@
+[
+    {
+        "Type": "httpPost",
+        "Pattern": "type:dice",
+        "url": "https://localhost:5001/numatics"
+    }
+]

@@ -1,0 +1,12 @@
+[
+    {
+        "Pattern": {
+            "$.banado": "potato?"
+        },
+        "Route" : {
+            "Type": "NATS",
+            "Subject": "potatoes",
+            "TimeoutInSeconds": 5
+        }
+    }
+]
