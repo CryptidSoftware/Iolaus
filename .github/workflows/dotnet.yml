@@ -42,4 +42,4 @@ jobs:
     - name: Pack
       run: dotnet pack --configuration Release Iolaus/Iolaus.csproj
     - name: Publish
-      run: dotnet nuget push Iolaus/bin/Release/*.nupkg --api-key $NUGET_AUTH_TOKEN
+      run: dotnet nuget push Iolaus/bin/Release/*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }}
