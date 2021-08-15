@@ -29,6 +29,7 @@ jobs:
         useConfigFile: true
         configFilePath: src/GitVersion.yml
         additionalArguments: '/updateprojectfiles'
+    - run: cat Iolaus/Iolaus.csproj
     - name: Restore dependencies
       run: dotnet restore Iolaus/Iolaus.csproj
     - name: Build
