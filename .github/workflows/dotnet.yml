@@ -1,0 +1,25 @@
+name: .NET
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    defaults:
+      run: 
+        working-directory: src 
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Restore dependencies
+      run: dotnet restore Iolaus/Iolaus.csproj
+    - name: Build
+      run: dotnet build --no-restore Iolaus/Iolaus.csproj
+    - name: Test
+      run: dotnet test Iolaus.Tests --verbosity normal
