@@ -3,7 +3,7 @@ name: .NET
 on: [push, pull_request]
 
 jobs:
-  build:
+  build_iolaus:
 
     runs-on: ubuntu-latest
     
@@ -17,6 +17,10 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v0.9.10
+      with:
+        versionSpec: '5.x'
     - name: Restore dependencies
       run: dotnet restore Iolaus/Iolaus.csproj
     - name: Build
