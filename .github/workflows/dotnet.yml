@@ -21,6 +21,11 @@ jobs:
       uses: gittools/actions/gitversion/setup@v0.9.10
       with:
         versionSpec: '5.x'
+    - name: Write Version
+      uses: gittools/actions/gitversion/execute@v0.9.10
+      with: 
+        useConfigFile: true
+        additionalArguments: '/updateprojectfiles'
     - name: Restore dependencies
       run: dotnet restore Iolaus/Iolaus.csproj
     - name: Build
