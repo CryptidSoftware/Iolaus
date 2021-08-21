@@ -4,13 +4,10 @@ on: [push, pull_request]
 
 jobs:
   build_iolaus:
-
     runs-on: ubuntu-latest
-    
     defaults:
       run: 
         working-directory: src 
-
     steps:
     - uses: actions/checkout@v2
       with: 
@@ -32,7 +29,6 @@ jobs:
         useConfigFile: true
         configFilePath: src/GitVersion.yml
         additionalArguments: '/updateprojectfiles'
-    - run: cat Iolaus/Iolaus.csproj
     - name: Restore dependencies
       run: dotnet restore Iolaus/Iolaus.csproj
     - name: Build
@@ -43,3 +39,143 @@ jobs:
       run: dotnet pack --configuration Release Iolaus/Iolaus.csproj
     - name: Publish
       run: dotnet nuget push Iolaus/bin/Release/*.nupkg
+
+  build_iolaus_observer:
+    runs-on: ubuntu-latest
+    defaults:
+      run: 
+        working-directory: src 
+    steps:
+    - uses: actions/checkout@v2
+      with: 
+        fetch-depth: 0
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+        source-url: https://nuget.pkg.github.com/cryptidsoftware/index.json
+      env:
+        NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v0.9.10
+      with:
+        versionSpec: '5.x'
+    - name: Write Version
+      uses: gittools/actions/gitversion/execute@v0.9.10
+      with:
+        useConfigFile: true
+        configFilePath: src/GitVersion.yml
+        additionalArguments: '/updateprojectfiles'
+    - name: Restore dependencies
+      run: dotnet restore Iolaus.Observer/Iolaus.Observer.csproj
+    - name: Build
+      run: dotnet build --no-restore Iolaus.Observer/Iolaus.Observer.csproj
+    - name: Pack
+      run: dotnet pack --configuration Release Iolaus.Observer/Iolaus.Observer.csproj
+    - name: Publish
+      run: dotnet nuget push Iolaus.Observer/bin/Release/*.nupkg
+
+  build_iolaus_nats:
+    runs-on: ubuntu-latest
+    defaults:
+      run: 
+        working-directory: src 
+    steps:
+    - uses: actions/checkout@v2
+      with: 
+        fetch-depth: 0
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+        source-url: https://nuget.pkg.github.com/cryptidsoftware/index.json
+      env:
+        NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v0.9.10
+      with:
+        versionSpec: '5.x'
+    - name: Write Version
+      uses: gittools/actions/gitversion/execute@v0.9.10
+      with:
+        useConfigFile: true
+        configFilePath: src/GitVersion.yml
+        additionalArguments: '/updateprojectfiles'
+    - name: Restore dependencies
+      run: dotnet restore Iolaus.Nats/Iolaus.Nats.csproj
+    - name: Build
+      run: dotnet build --no-restore Iolaus.Nats/Iolaus.Nats.csproj
+    - name: Pack
+      run: dotnet pack --configuration Release Iolaus.Nats/Iolaus.Nats.csproj
+    - name: Publish
+      run: dotnet nuget push Iolaus.Nats/bin/Release/*.nupkg
+
+  build_iolaus_http:
+    runs-on: ubuntu-latest
+    defaults:
+      run: 
+        working-directory: src 
+    steps:
+    - uses: actions/checkout@v2
+      with: 
+        fetch-depth: 0
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+        source-url: https://nuget.pkg.github.com/cryptidsoftware/index.json
+      env:
+        NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v0.9.10
+      with:
+        versionSpec: '5.x'
+    - name: Write Version
+      uses: gittools/actions/gitversion/execute@v0.9.10
+      with:
+        useConfigFile: true
+        configFilePath: src/GitVersion.yml
+        additionalArguments: '/updateprojectfiles'
+    - name: Restore dependencies
+      run: dotnet restore Iolaus.Http/Iolaus.Http.csproj
+    - name: Build
+      run: dotnet build --no-restore Iolaus.Http/Iolaus.Http.csproj
+    - name: Pack
+      run: dotnet pack --configuration Release Iolaus.Http/Iolaus.Http.csproj
+    - name: Publish
+      run: dotnet nuget push Iolaus.Http/bin/Release/*.nupkg
+
+  build_iolaus_config_etcd:
+    runs-on: ubuntu-latest
+    defaults:
+      run: 
+        working-directory: src 
+    steps:
+    - uses: actions/checkout@v2
+      with: 
+        fetch-depth: 0
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+        source-url: https://nuget.pkg.github.com/cryptidsoftware/index.json
+      env:
+        NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v0.9.10
+      with:
+        versionSpec: '5.x'
+    - name: Write Version
+      uses: gittools/actions/gitversion/execute@v0.9.10
+      with:
+        useConfigFile: true
+        configFilePath: src/GitVersion.yml
+        additionalArguments: '/updateprojectfiles'
+    - name: Restore dependencies
+      run: dotnet restore Iolaus.Config.Etcd/Iolaus.Config.Etcd.csproj
+    - name: Build
+      run: dotnet build --no-restore Iolaus.Config.Etcd/Iolaus.Config.Etcd.csproj
+    - name: Pack
+      run: dotnet pack --configuration Release Iolaus.Config.Etcd/Iolaus.Config.Etcd.csproj
+    - name: Publish
+      run: dotnet nuget push Iolaus.Config.Etcd/bin/Release/*.nupkg
