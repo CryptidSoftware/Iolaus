@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <RepositoryUrl>https://github.com/CryptidSoftware/Iolaus</RepositoryUrl>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Iolaus.Observer\Iolaus.Observer.csproj" />
+      <ProjectReference Include="..\Iolaus\Iolaus.csproj" />
+    </ItemGroup>
+
+</Project>
