@@ -5,9 +5,9 @@ using Iolaus.Config;
 using Iolaus.Observer;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Iolaus.Local
+namespace Iolaus.Loopback
 {
-    public static class LocalRoute
+    public static class LoopbackRoute
     {
         public static Func<IServiceProvider, RouteConfiguration, Func<Message, IObservable<Option<Message>>>> Route =
             (provider, configuration) => (message) =>
