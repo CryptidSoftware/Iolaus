@@ -1,13 +1,13 @@
+using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Iolaus.Observer
 {
     using ReplyFunction = Func<Message, Task>;
-
     public class ObserverRouter
     {
         private readonly PatternStore<MethodInfo> _patternStore;
@@ -17,40 +17,42 @@ namespace Iolaus.Observer
             _patternStore = new PatternStore<MethodInfo>();
         }
 
+        public void LoadHandlers(IEnumerable<Assembly> assemblies)
+        {
+            var methods = assemblies
+                .SelectMany(x => x.GetTypes())
+                .Where(x => x.GetCustomAttributes(typeof(HandlerAttribute), true).Length > 0)
+                .SelectMany(x => x.GetMethods());
+
+                foreach (var method in methods)
+                {
+                    var attributes = method.GetCustomAttributes(typeof(PatternAttribute), true);
+
+                    if (!attributes.Any())
+                    {
+                        continue;
+                    }
+
+                    var patternAttribute = attributes[0] as PatternAttribute;
+                    var pattern = Pattern.Parse(patternAttribute.Pattern);
+                    _patternStore.Add(pattern.Unsafe(), method);
+                }
+        }
+
         public void LoadHandlers(Assembly assembly)
         {
-            var types = assembly
-                .GetTypes()
-                .Where(t => t.GetCustomAttributes(typeof(HandlerAttribute), true).Length > 0);
-
-            var methods = types.SelectMany(t => t.GetMethods());
-
-            foreach (var method in methods)
-            {
-                var attributes = method.GetCustomAttributes(typeof(PatternAttribute), true);
-
-                if (!attributes.Any())
-                {
-                    continue;
-                }
-
-                var patternAttribute = attributes[0] as PatternAttribute;
-                var pattern = Pattern.Parse(patternAttribute.Pattern);
-                _patternStore.Add(pattern.Unsafe(), method);
-            }
+            LoadHandlers(new[]{assembly});
         }
 
         public Func<Message, ReplyFunction, Task> GetFunc(IServiceProvider provider, Message message)
         {
             var handler = _patternStore.BestMatch(message).Match(
                 Some: (m) => m,
-                None: () => throw new ArgumentException("Oh no")
+                None: () => throw new NotImplementedException($"No handler was found for: {message}")
             );
 
             var instance = ActivatorUtilities.CreateInstance(provider,handler.ReflectedType);
-            var x = handler.CreateDelegate<Func<Message, ReplyFunction, Task>>(instance);
-            return x;
+            return handler.CreateDelegate<Func<Message, ReplyFunction, Task>>(instance);
         }
-
     }
 }

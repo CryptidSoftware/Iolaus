@@ -10,7 +10,6 @@ using System.Text;
 
 namespace Iolaus.Nats
 {   
-    //docker run --rm -p 4222:4222 -p 8222:8222 -p 6222:6222 --name nats-server -ti nats:latest
     public static class NatsRoute
     {
         public static Func<IServiceProvider, RouteConfiguration, Func<Message, IObservable<Option<Message>>>> Route = (IServiceProvider serviceProvider, RouteConfiguration configuration) => (Message message) =>
