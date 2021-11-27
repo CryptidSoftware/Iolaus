@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using static Iolaus.F;
 
 namespace Iolaus.Observer
 {
@@ -44,15 +45,15 @@ namespace Iolaus.Observer
             LoadHandlers(new[]{assembly});
         }
 
-        public Func<Message, ReplyFunction, Task> GetFunc(IServiceProvider provider, Message message)
+        public Option<Func<Message, ReplyFunction, Task>> GetFunc(IServiceProvider provider, Message message)
         {
-            var handler = _patternStore.BestMatch(message).Match(
-                Some: (m) => m,
-                None: () => throw new NotImplementedException($"No handler was found for: {message}")
+            return _patternStore.BestMatch(message).Match<Option<Func<Message, ReplyFunction, Task>>>(
+                Some: (m) => {
+                    var instance = ActivatorUtilities.CreateInstance(provider,m.ReflectedType);
+                    return Some(m.CreateDelegate<Func<Message, ReplyFunction, Task>>(instance));
+                },
+                None: () => {return None;}
             );
-
-            var instance = ActivatorUtilities.CreateInstance(provider,handler.ReflectedType);
-            return handler.CreateDelegate<Func<Message, ReplyFunction, Task>>(instance);
         }
     }
 }

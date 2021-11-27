@@ -37,8 +37,12 @@ namespace Iolaus.Nats
                 using var scope = _scopeFactory.CreateScope();
                 var msg = Encoding.UTF8.GetString(args.Message.Data);
                 var message = Message.Parse(msg).Unsafe();
-                var handlerFunc = _router.GetFunc(scope.ServiceProvider, message);
-                await handlerFunc(message, BuildReply(args.Message));
+                var optionHandler = _router.GetFunc(scope.ServiceProvider, message);
+
+                await optionHandler.Match(
+                    None: async () => await Task.CompletedTask,
+                    Some: async (handler) => await handler(message, BuildReply(args.Message))
+                );
             }
             catch (Exception e)
             {
